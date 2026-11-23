@@ -71,3 +71,34 @@ jest.mock('react-native-safe-area-context', () => {
     SafeAreaView: 'SafeAreaView',
   };
 });
+
+jest.mock('react-native-maps', () => {
+  return {
+    __esModule: true,
+    default: 'MapView',
+    MapView: 'MapView',
+    Marker: 'Marker',
+    Polyline: 'Polyline',
+    PROVIDER_GOOGLE: 'google',
+    PROVIDER_DEFAULT: 'default',
+  };
+});
+
+jest.mock('react-native-webview', () => {
+  return {
+    __esModule: true,
+    default: 'WebView',
+    WebView: 'WebView',
+  };
+});
+
+jest.mock('expo-location', () => ({
+  requestForegroundPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted' }),
+  getCurrentPositionAsync: jest.fn().mockResolvedValue({
+    coords: {
+      latitude: 19.0544,
+      longitude: 72.8258,
+    },
+  }),
+}));
+

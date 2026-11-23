@@ -1,5 +1,6 @@
 import { tokenStorage } from './storage';
 import { mockAuthAdapter } from './mockAuthAdapter';
+import { mockBookingAdapter } from './mockBookingAdapter';
 import { generateIdempotencyKey } from '../utils/idempotency';
 
 const DEFAULT_BASE_URL = 'http://localhost:4000/api/v1';
@@ -97,6 +98,38 @@ async function handleMockRequest(endpoint, method, body) {
   if (endpoint === '/auth/logout') {
     return { success: true, data: { message: 'Logged out' } };
   }
+
+  // Fares & Quotes
+  if (endpoint.startsWith('/fares/quote')) {
+    // Parse query params from URL
+    const queryString = endpoint.includes('?') ? endpoint.split('?')[1] : '';
+    const params = new URLSearchParams(queryString);
+    const vehicleType = params.get('vehicleType') || 'BIKE';
+    const pickupLng = parseFloat(params.get('pickupLng')) || 72.8258;
+    const pickupLat = parseFloat(params.get('pickupLat')) || 19.0544;
+    const dropLng = parseFloat(params.get('dropLng')) || 72.8687;
+    const dropLat = parseFloat(params.get('dropLat')) || 19.0657;
+    const zone = params.get('zone') || 'mumbai';
+
+    return mockBookingAdapter.getFareQuote({ vehicleType, pickupLng, pickupLat, dropLng, dropLat, zone });
+  }
+
+  // Bookings
+  if (endpoint === '/bookings' && method === 'POST') {
+    return mockBookingAdapter.createBooking(body);
+  }
+  if (endpoint === '/bookings/mine' && method === 'GET') {
+    return mockBookingAdapter.listMyBookings();
+  }
+  if (endpoint.startsWith('/bookings/') && endpoint.endsWith('/cancel') && method === 'POST') {
+    const bookingId = endpoint.split('/')[2];
+    return mockBookingAdapter.cancelBooking(bookingId, body?.reason);
+  }
+  if (endpoint.startsWith('/bookings/') && method === 'GET') {
+    const bookingId = endpoint.split('/')[2];
+    return mockBookingAdapter.getBooking(bookingId);
+  }
+
   throw new Error(`Endpoint ${endpoint} not implemented in mock adapter`);
 }
 

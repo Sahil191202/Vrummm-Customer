@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, ActivityIndicator, Text, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTheme } from '../theme/useTheme';
@@ -15,11 +15,13 @@ import OnboardingScreen from '../screens/OnboardingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import HomeScreen from '../screens/HomeScreen';
+import PlaceSelectScreen from '../screens/PlaceSelectScreen';
 
 const Stack = createNativeStackNavigator();
 
 export function RootNavigator() {
-  const { colors, typography } = useTheme();
+  const { colors } = useTheme();
   const { t } = useTranslation();
   const { isAuthenticated, isInitializing, initializeAuth } = useAuthStore();
 
@@ -48,48 +50,23 @@ export function RootNavigator() {
       <Stack.Navigator screenOptions={defaultScreenOptions}>
         {isAuthenticated ? (
           <>
-            <Stack.Screen
-              name="Profile"
-              component={ProfileScreen}
-              options={{ title: t('profile.title') }}
-            />
-            <Stack.Screen
-              name="LanguageSelect"
-              component={LanguageSelectScreen}
-              options={{ title: t('language.title') }}
-            />
-            <Stack.Screen
-              name="ThemeSelect"
-              component={ThemeSelectScreen}
-              options={{ title: t('theme.title') }}
-            />
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="PlaceSelect" component={PlaceSelectScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
+            <Stack.Screen name="LanguageSelect" component={LanguageSelectScreen} />
+            <Stack.Screen name="ThemeSelect" component={ThemeSelectScreen} />
           </>
         ) : (
           <>
-            <Stack.Screen
-              name="Welcome"
-              component={WelcomeScreen}
-            />
-            <Stack.Screen
-              name="LanguageSelect"
-              component={LanguageSelectScreen}
-            />
-            <Stack.Screen
-              name="ThemeSelect"
-              component={ThemeSelectScreen}
-            />
-            <Stack.Screen
-              name="Onboarding"
-              component={OnboardingScreen}
-            />
-            <Stack.Screen
-              name="Login"
-              component={LoginScreen}
-            />
-            <Stack.Screen
-              name="Register"
-              component={RegisterScreen}
-            />
+            <Stack.Screen name="Welcome" component={WelcomeScreen} />
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="PlaceSelect" component={PlaceSelectScreen} />
+            <Stack.Screen name="LanguageSelect" component={LanguageSelectScreen} />
+            <Stack.Screen name="ThemeSelect" component={ThemeSelectScreen} />
+            <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
           </>
         )}
       </Stack.Navigator>
